@@ -11,6 +11,7 @@ class DeltaMarkdownDecoder extends Converter<String, Delta>
   final _delta = Delta();
   final Attributes _attributes = {};
   final List<md.InlineSyntax> customInlineSyntaxes;
+  bool _clearLeadingSpaces = true;
 
   DeltaMarkdownDecoder({
     this.customInlineSyntaxes = const [],
@@ -62,9 +63,16 @@ class DeltaMarkdownDecoder extends Converter<String, Delta>
 
   @override
   void visitText(md.Text text) {
+    String content = text.textContent;
+
+    if (_clearLeadingSpaces) {
+      content = content.replaceFirst(RegExp('^[ \t]+'), ''); /// trim leading white space and tabs from the string, but keep no-wrap spaces
+      _clearLeadingSpaces = false;
+    }
+
     _delta.add(
       TextInsert(
-        text.textContent.replaceFirst(RegExp('^[ \t]+'), ''), /// trim leading white space and tabs from the string, but keep no-wrap spaces
+        content,
         attributes: {..._attributes},
       )
     );
