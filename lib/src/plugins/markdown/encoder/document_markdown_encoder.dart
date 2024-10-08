@@ -13,13 +13,19 @@ class DocumentMarkdownEncoder extends Converter<Document, String> {
   @override
   String convert(Document input) {
     final buffer = StringBuffer();
+    String? lastNodeType;
     for (final node in input.root.children) {
       NodeParser? parser = parsers.firstWhereOrNull(
         (element) => element.id == node.type,
       );
       if (parser != null) {
+        if (lastNodeType != node.type && [BulletedListBlockKeys.type, NumberedListBlockKeys.type].contains(lastNodeType)) {
+          buffer.write('\n');
+        }
+
         buffer.write(parser.transform(node, this));
       }
+      lastNodeType = node.type;
     }
     return buffer.toString();
   }

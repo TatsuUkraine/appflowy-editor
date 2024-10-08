@@ -11,13 +11,13 @@ class TextNodeParser extends NodeParser {
     final delta = node.delta ?? Delta()
       ..insert('');
     final children = encoder?.convertNodes(node.children, withIndent: true);
-    String markdown = DeltaMarkdownEncoder().convert(delta);
+    String markdown = DeltaMarkdownEncoder().convert(delta).replaceAll('\n', '  \n');
     if (markdown.isEmpty && children == null) {
       return '';
     } else if (node
             .findParent((element) => element.type == TableBlockKeys.type) ==
         null) {
-      markdown += '\n';
+      markdown += '\n\n';
     }
     if (children != null && children.isNotEmpty) {
       markdown += children;

@@ -14,7 +14,7 @@ class HeadingNodeParser extends NodeParser {
     final attributes = node.attributes;
     final level = attributes[HeadingBlockKeys.level] as int? ?? 1;
     final result = '${'#' * level} $markdown';
-    final suffix = node.next == null ? '' : '\n';
+    final suffix = node.next == null ? '' : '\n\n';
 
     return '$result$suffix';
   }
