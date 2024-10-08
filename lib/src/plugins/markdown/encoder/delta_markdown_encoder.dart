@@ -14,7 +14,8 @@ class DeltaMarkdownEncoder extends Converter<Delta, String> {
       final op = iterator.current;
       if (op is TextInsert) {
         final attributes = op.attributes;
-        final text = op.text.replaceAll('\n', '  \n');
+        final text = op.text.split('\n').map((e) => e.trimRight()).join('  \n');
+
         if (attributes != null) {
           buffer.write(_prefixSyntax(attributes));
           buffer.write(text);
