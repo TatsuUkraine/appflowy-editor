@@ -11,7 +11,7 @@ class TextNodeParser extends NodeParser {
     final delta = node.delta ?? Delta()
       ..insert('');
     final children = encoder?.convertNodes(node.children, withIndent: true);
-    String markdown = DeltaMarkdownEncoder().convert(delta).replaceAll('\n', '  \n');
+    String markdown = DeltaMarkdownEncoder().convert(delta);
     if (markdown.isEmpty && children == null) {
       return '';
     } else if (node
