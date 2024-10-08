@@ -52,12 +52,22 @@ class DeltaMarkdownDecoder extends Converter<String, Delta>
   @override
   bool visitElementBefore(md.Element element) {
     _addAttributeKey(element);
+
+    if (element.tag == 'br') {
+      _delta.add(TextInsert('\n', attributes: {..._attributes}));
+    }
+
     return true;
   }
 
   @override
   void visitText(md.Text text) {
-    _delta.add(TextInsert(text.text, attributes: {..._attributes}));
+    _delta.add(
+      TextInsert(
+        text.textContent.replaceFirst(RegExp('^[ \t]+'), ''), /// trim leading white space and tabs from the string, but keep no-wrap spaces
+        attributes: {..._attributes},
+      )
+    );
   }
 
   void _addAttributeKey(md.Element element) {
@@ -102,5 +112,23 @@ class DeltaMarkdownDecoder extends Converter<String, Delta>
         _attributes.remove(key);
       }
     }
+  }
+}
+
+const int $space = 0x20;
+const int $tab = 0x09;
+extension StringExtensions on String {
+  /// Calculates the length of indentation a `String` has.
+  ///
+  // The behavior of tabs: https://spec.commonmark.org/0.30/#tabs
+  int indentation() {
+    var length = 0;
+    for (final char in codeUnits) {
+      if (char != $space && char != $tab) {
+        break;
+      }
+      length += char == $tab ? 4 - (length % 4) : 1;
+    }
+    return length;
   }
 }
