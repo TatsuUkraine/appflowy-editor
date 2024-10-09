@@ -6,6 +6,9 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 ///
 /// Only support inline styles, like bold, italic, underline, strike, code.
 class DeltaMarkdownEncoder extends Converter<Delta, String> {
+  static const int $space = 0x20;
+  static const int $noWrapSpace = 0x00A0;
+
   @override
   String convert(Delta input) {
     final buffer = StringBuffer();
@@ -14,7 +17,15 @@ class DeltaMarkdownEncoder extends Converter<Delta, String> {
       final op = iterator.current;
       if (op is TextInsert) {
         final attributes = op.attributes;
-        final text = op.text.split('\n').map((e) => e.trimRight()).join('  \n');
+        String text = op.text;
+
+        if (buffer.isEmpty) {
+          text = _encodeLeadingSpaces(text);
+        }
+        
+        if (text.contains('\n')) {
+          text = text.split('\n').map((e) => e.trimRight()).join('  \n');
+        }
 
         if (attributes != null) {
           buffer.write(_prefixSyntax(attributes));
@@ -86,5 +97,26 @@ class DeltaMarkdownEncoder extends Converter<Delta, String> {
     }
 
     return syntax;
+  }
+
+  String _encodeLeadingSpaces(String text) {
+    if (text.isEmpty || ![$space, $noWrapSpace].contains(text.codeUnits.first)) {
+      return text;
+    }
+
+    final clearedString = text.trimLeft();
+    final spaceCount = text.length - clearedString.length;
+
+    if (spaceCount == 0) {
+      return text;
+    }
+
+    String prefix = '';
+
+    for (int i = 0; i < spaceCount; i++) {
+      prefix += String.fromCharCode(i.isEven ? $noWrapSpace : $space);
+    }
+
+    return '$prefix$clearedString';
   }
 }
