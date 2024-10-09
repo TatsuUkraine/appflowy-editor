@@ -122,21 +122,3 @@ class DeltaMarkdownDecoder extends Converter<String, Delta>
     }
   }
 }
-
-const int $space = 0x20;
-const int $tab = 0x09;
-extension StringExtensions on String {
-  /// Calculates the length of indentation a `String` has.
-  ///
-  // The behavior of tabs: https://spec.commonmark.org/0.30/#tabs
-  int indentation() {
-    var length = 0;
-    for (final char in codeUnits) {
-      if (char != $space && char != $tab) {
-        break;
-      }
-      length += char == $tab ? 4 - (length % 4) : 1;
-    }
-    return length;
-  }
-}
