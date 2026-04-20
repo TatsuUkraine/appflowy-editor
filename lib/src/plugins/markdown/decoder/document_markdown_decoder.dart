@@ -28,10 +28,9 @@ class DocumentMarkdownDecoder extends Converter<String, Document> {
 
     final nodes = mdNodes
         .map((mdNode) => _parseNode(mdNode))
-        .toList()
-        .whereNotNull()
-        .toList()
-        .flattened;
+        .nonNulls
+        .flattened
+        .toList();
 
     if (nodes.isNotEmpty) {
       document.insert([0], nodes);
