@@ -18,9 +18,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:printing/printing.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:universal_platform/universal_platform.dart';
 
 enum ExportFileType {
@@ -344,78 +341,77 @@ class _HomePageState extends State<HomePage> {
     EditorState editorState,
     ExportFileType fileType,
   ) async {
-    var result = '';
-
-    switch (fileType) {
-      case ExportFileType.documentJson:
-        result = jsonEncode(editorState.document.toJson());
-        break;
-      case ExportFileType.markdown:
-        result = documentToMarkdown(editorState.document);
-        break;
-      case ExportFileType.pdf:
-        result = documentToMarkdown(editorState.document);
-        break;
-
-      case ExportFileType.delta:
-        throw UnimplementedError();
-    }
-
-    if (kIsWeb) {
-      final blob = html.Blob([result], 'text/plain', 'native');
-      html.AnchorElement(
-        href: html.Url.createObjectUrlFromBlob(blob).toString(),
-      )
-        ..setAttribute('download', 'document.${fileType.extension}')
-        ..click();
-    } else if (UniversalPlatform.isMobile) {
-      final appStorageDirectory = await getApplicationDocumentsDirectory();
-
-      final path = File(
-        '${appStorageDirectory.path}/${DateTime.now()}.${fileType.extension}',
-      );
-      await path.writeAsString(result);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'This document is saved to the ${appStorageDirectory.path}',
-            ),
-          ),
-        );
-      }
-    } else {
-      // for desktop
-      final path = await FilePicker.saveFile(
-        fileName: 'document.${fileType.extension}',
-      );
-      if (path != null) {
-        await File(path).writeAsString(result);
-        if (fileType == ExportFileType.pdf) {
-          final pdf = await PdfHTMLEncoder(
-            fontFallback: [
-              await PdfGoogleFonts.notoColorEmoji(),
-              await PdfGoogleFonts.notoColorEmojiRegular(),
-            ],
-          ).convert(result);
-
-          await File(path).writeAsBytes(await pdf.save());
-        }
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('This document is saved to the $path'),
-            ),
-          );
-        }
-      }
-    }
+    // var result = '';
+    //
+    // switch (fileType) {
+    //   case ExportFileType.documentJson:
+    //     result = jsonEncode(editorState.document.toJson());
+    //     break;
+    //   case ExportFileType.markdown:
+    //     result = documentToMarkdown(editorState.document);
+    //     break;
+    //   case ExportFileType.pdf:
+    //     result = documentToMarkdown(editorState.document);
+    //     break;
+    //
+    //   case ExportFileType.delta:
+    //     throw UnimplementedError();
+    // }
+    //
+    // if (kIsWeb) {
+    //   final blob = html.Blob([result], 'text/plain', 'native');
+    //   html.AnchorElement(
+    //     href: html.Url.createObjectUrlFromBlob(blob).toString(),
+    //   )
+    //     ..setAttribute('download', 'document.${fileType.extension}')
+    //     ..click();
+    // } else if (UniversalPlatform.isMobile) {
+    //   final appStorageDirectory = await getApplicationDocumentsDirectory();
+    //
+    //   final path = File(
+    //     '${appStorageDirectory.path}/${DateTime.now()}.${fileType.extension}',
+    //   );
+    //   await path.writeAsString(result);
+    //   if (mounted) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text(
+    //           'This document is saved to the ${appStorageDirectory.path}',
+    //         ),
+    //       ),
+    //     );
+    //   }
+    // } else {
+    //   // for desktop
+    //   final path = await FilePicker.saveFile(
+    //     fileName: 'document.${fileType.extension}',
+    //   );
+    //   if (path != null) {
+    //     await File(path).writeAsString(result);
+    //     if (fileType == ExportFileType.pdf) {
+    //       final pdf = await PdfHTMLEncoder(
+    //         fontFallback: [
+    //           await PdfGoogleFonts.notoColorEmoji(),
+    //           await PdfGoogleFonts.notoColorEmojiRegular(),
+    //         ],
+    //       ).convert(result);
+    //
+    //       await File(path).writeAsBytes(await pdf.save());
+    //     }
+    //
+    //     if (mounted) {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text('This document is saved to the $path'),
+    //         ),
+    //       );
+    //     }
+    //   }
+    // }
   }
 
   void _importFile(ExportFileType fileType) async {
     final result = await FilePicker.pickFiles(
-      allowMultiple: false,
       allowedExtensions: [fileType.extension],
       type: FileType.custom,
     );
@@ -427,7 +423,7 @@ class _HomePageState extends State<HomePage> {
       }
       plainText = await File(path).readAsString();
     } else {
-      final bytes = result?.files.first.bytes;
+      final bytes = await result?.files.first.readAsBytes();
       if (bytes == null) {
         return;
       }
