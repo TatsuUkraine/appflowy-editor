@@ -173,6 +173,9 @@ class DeltaTextInputService extends TextInputService with DeltaTextInputClient {
       }
     }
   }
+
+  @override
+  bool onFocusReceived() => attached;
 }
 
 const String _whitespace = ' ';
