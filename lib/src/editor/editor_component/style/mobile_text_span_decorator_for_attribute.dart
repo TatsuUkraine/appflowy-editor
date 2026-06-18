@@ -175,9 +175,15 @@ class _LinkEditFormState extends State<LinkEditForm> {
                       widget.hrefText.length,
                       {BuiltInAttributeKey.href: null},
                     );
-                  await widget.editorState
-                      .apply(transaction)
-                      .whenComplete(() => Navigator.of(context).pop());
+
+                  try {
+                    await widget.editorState
+                        .apply(transaction);
+                  } finally {
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  }
                 },
               ),
               TextButton(
@@ -205,9 +211,14 @@ class _LinkEditFormState extends State<LinkEditForm> {
                                 hrefAddressTextEditingController.text,
                           },
                         );
-                      await widget.editorState.apply(transaction).whenComplete(
-                            () => Navigator.of(context).pop(),
-                          );
+
+                      try {
+                        await widget.editorState.apply(transaction);
+                      } finally {
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      }
                     } else if (textChanged && !addressChanged) {
                       final transaction = widget.editorState.transaction
                         ..replaceText(
@@ -216,14 +227,24 @@ class _LinkEditFormState extends State<LinkEditForm> {
                           widget.hrefText.length,
                           hrefTextTextEditingController.text,
                         );
-                      await widget.editorState.apply(transaction).whenComplete(
-                            () => Navigator.of(context).pop(),
-                          );
+
+                      try {
+                        await widget.editorState.apply(transaction);
+                      } finally {
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      }
                     } else if (!textChanged && addressChanged) {
-                      await widget.editorState.formatDelta(widget.selection, {
-                        AppFlowyRichTextKeys.href:
-                            hrefAddressTextEditingController.value.text,
-                      }).whenComplete(() => Navigator.of(context).pop());
+                      try {
+                        await widget.editorState.formatDelta(widget.selection, {
+                          AppFlowyRichTextKeys.href: hrefAddressTextEditingController.value.text,
+                        });
+                      } finally {
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      }
                     } else {
                       Navigator.of(context).pop();
                     }

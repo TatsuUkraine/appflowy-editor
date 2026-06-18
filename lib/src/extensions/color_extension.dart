@@ -31,6 +31,6 @@ extension ColorExtension2 on Color {
   }
 
   String toRgbaString() {
-    return 'rgba($red, $green, $blue, $alpha)';
+    return 'rgba(${(r * 255.0).round().clamp(0, 255)}, ${(g * 255.0).round().clamp(0, 255)}, ${(b * 255.0).round().clamp(0, 255)}, ${(a * 255.0).round().clamp(0, 255)})';
   }
 }

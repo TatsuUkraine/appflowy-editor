@@ -74,7 +74,7 @@ class DeltaMarkdownDecoder extends Converter<String, Delta>
       TextInsert(
         content,
         attributes: {..._attributes},
-      )
+      ),
     );
   }
 
