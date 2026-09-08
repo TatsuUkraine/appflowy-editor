@@ -26,7 +26,7 @@ abstract class FilePickerService {
   }) async =>
       throw UnimplementedError('pickFiles() has not been implemented.');
 
-  Future<String?> saveFile({
+  Future<Uri?> saveFile({
     required String fileName,
     required Uint8List bites,
     String? dialogTitle,

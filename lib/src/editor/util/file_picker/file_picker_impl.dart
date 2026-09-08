@@ -23,13 +23,14 @@ class FilePicker implements FilePickerService {
       type: type,
       allowedExtensions: allowedExtensions,
       onFileLoading: onFileLoading,
-      lockParentWindow: lockParentWindow,
+      windowsOptions: fp.WindowsOptions(lockParentWindow: lockParentWindow),
+      linuxOptions: fp.LinuxOptions(lockParentWindow: lockParentWindow),
     );
-    return FilePickerResult(result?.files ?? []);
+    return FilePickerResult(result);
   }
 
   @override
-  Future<String?> saveFile({
+  Future<Uri?> saveFile({
     required String fileName,
     required Uint8List bites,
     String? dialogTitle,
@@ -45,7 +46,8 @@ class FilePicker implements FilePickerService {
       initialDirectory: initialDirectory,
       type: type,
       allowedExtensions: allowedExtensions,
-      lockParentWindow: lockParentWindow,
+      windowsOptions: fp.WindowsOptions(lockParentWindow: lockParentWindow),
+      linuxOptions: fp.LinuxOptions(lockParentWindow: lockParentWindow),
     );
   }
 }
