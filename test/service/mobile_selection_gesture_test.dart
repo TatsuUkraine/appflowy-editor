@@ -1,6 +1,6 @@
 import 'package:appflowy_editor/src/service/selection/mobile_selection_gesture.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../test_helper.dart';

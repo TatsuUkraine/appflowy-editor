@@ -1,7 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:appflowy_editor_plugins/appflowy_editor_plugins.dart';
 import 'package:example/pages/markdown/markdown_code_block_parser.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MarkdownEditor extends StatefulWidget {

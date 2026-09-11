@@ -16,7 +16,7 @@ import 'package:example/pages/focus_example_for_editor.dart';
 import 'package:example/pages/markdown_editor.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:universal_platform/universal_platform.dart';
 
@@ -417,13 +417,13 @@ class _HomePageState extends State<HomePage> {
     );
     var plainText = '';
     if (!kIsWeb) {
-      final path = result?.files.single.path;
+      final path = result.firstOrNull?.path;
       if (path == null) {
         return;
       }
       plainText = await File(path).readAsString();
     } else {
-      final bytes = await result?.files.first.readAsBytes();
+      final bytes = await result.firstOrNull?.readAsBytes();
       if (bytes == null) {
         return;
       }

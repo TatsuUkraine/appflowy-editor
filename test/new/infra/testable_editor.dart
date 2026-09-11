@@ -1,6 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:appflowy_editor/src/editor/editor_component/service/ime/text_input_service.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart' hide GlobalMaterialLocalizations;
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';

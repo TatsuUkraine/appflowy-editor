@@ -1,6 +1,6 @@
 import 'package:appflowy_editor/src/editor/util/platform_extension.dart';
 import 'package:appflowy_editor/src/render/selection/mobile_basic_handle.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MobileCollapsedHandle extends StatelessWidget {
   const MobileCollapsedHandle({

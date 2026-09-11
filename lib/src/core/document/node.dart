@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:collection/collection.dart';
